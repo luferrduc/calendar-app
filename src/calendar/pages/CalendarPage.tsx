@@ -1,12 +1,12 @@
-import { Calendar, View } from 'react-big-calendar'
+import { useState } from 'react'
+import { Calendar, SlotInfo, View } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { addHours } from 'date-fns'
 
 import { Navbar } from "../components/Navbar"
 import { localizer, getMessagesES } from '@/helpers'
-import { CalendarEvent } from '../components'
+import { CalendarEvent, CalendarModal } from '../components'
 import { EventType } from '../types/calendar.types'
-import { useState } from 'react'
 
 
 
@@ -27,9 +27,10 @@ const events: EventType[]= [
 
 export const CalendarPage = () => {
 
-  const [lastView, setLastView] = useState<View>((localStorage.getItem('lastView') || 'week') as View)
+  const [lastView] = useState<View>((localStorage.getItem('lastView') || 'week') as View)
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  const eventStyleGetter = (event, start, end, isSelected) => {
+  const eventStyleGetter = () => {
     // console.log({event, start, end, isSelected})
     const style = {
       backgroundColor: '#347CF7',
@@ -48,11 +49,22 @@ export const CalendarPage = () => {
 
   const onSelect = (event: EventType) => {
     console.log({ click: event })
+    setIsOpen(true)
   }
+  
+  
+  const onSelectSlot = (slotInfo: SlotInfo) => {
+    // console.log(event)
+    // console.log({ slotInfo : slotInfo })
+    
+    setIsOpen(true)
+  }
+
 
   const onViewChange = (event: string) => {
     localStorage.setItem('lastView', event)
   }
+  const [isOpen, setIsOpen] = useState(true)
 
   return (
     <>
@@ -72,8 +84,12 @@ export const CalendarPage = () => {
         }}
         onDoubleClickEvent={onDoubleClick}
         onSelectEvent={onSelect}
+        onSelectSlot={onSelectSlot}
         onView={onViewChange}
+        selectable
+
       />
+      <CalendarModal isOpen={isOpen} setIsOpen={setIsOpen}/> 
     </>
   )
 }
