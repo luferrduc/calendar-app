@@ -3,11 +3,12 @@ import DatePicker from "react-datepicker";
 import Modal from "react-modal"
 import { registerLocale } from  "react-datepicker";
 import { es } from "date-fns/locale";
+import { addHours, differenceInMinutes } from "date-fns";
 import { toast } from "sonner"
 
 import "react-datepicker/dist/react-datepicker.css";
-import { addHours, differenceInMinutes } from "date-fns";
 import { FormValidations, useForm } from "@/common/hooks/useForm";
+import { useUiStore } from "@/common/hooks";
 
 
 registerLocale('es', es)
@@ -55,8 +56,12 @@ const formValidations: FormValidations<FormData> = {
 
 Modal.setAppElement('#root');
 
-export const CalendarModal = ({ isOpen, setIsOpen } : { isOpen: boolean, setIsOpen: React.Dispatch<React.SetStateAction<boolean>>}) => {
-  
+// { selectedDate } : { selectedDate: Date }
+export const CalendarModal = () => {
+
+  // TODO: crear snippet para useAppSelector
+  const { isDateModalOpen, closeDateModal } = useUiStore()
+
   const [formSubmitted, setFormSubmitted] = useState(false)
 
   //? Forma del profe Fernando
@@ -68,6 +73,9 @@ export const CalendarModal = ({ isOpen, setIsOpen } : { isOpen: boolean, setIsOp
   // })
   // const { end, notes, start, title } = formValues
   //? 
+
+  // formData.start = selectedDate
+  
   const { 
     onInputChange, 
     onDateChange, 
@@ -104,8 +112,8 @@ export const CalendarModal = ({ isOpen, setIsOpen } : { isOpen: boolean, setIsOp
   }, [formSubmitted, formErrors.title])
 
   const onCloseModal = () => {
-    console.log('cerrando modal')
-    setIsOpen(false)
+    closeDateModal()
+    
   }
 
   const onSubmitForm = (event: FormEvent) => {
@@ -146,14 +154,14 @@ export const CalendarModal = ({ isOpen, setIsOpen } : { isOpen: boolean, setIsOp
 
     // TODO: 
     // Cerrar el modal
-    setIsOpen(false)
+    onCloseModal()
     // Restablecer el form
     onResetForm()
     // Remover errores en pantalla
   }
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen={isDateModalOpen}
       onRequestClose={onCloseModal}
       style={customStyles}
       className="modal"

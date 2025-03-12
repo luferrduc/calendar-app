@@ -1,34 +1,34 @@
 import { useState } from 'react'
 import { Calendar, SlotInfo, View } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { addHours } from 'date-fns'
 
 import { Navbar } from "../components/Navbar"
 import { localizer, getMessagesES } from '@/helpers'
 import { CalendarEvent, CalendarModal } from '../components'
 import { EventType } from '../types/calendar.types'
+import { useUiStore, useCalendarStore } from '@/common/hooks'
 
 
-
-
-const events: EventType[]= [
-  {
-    title: 'Cumple del jefe',
-    notes: 'hay que comprar los bebestibles',
-    start: new Date(),
-    end: addHours(new Date(), 2),
-    bgColor: '#fafafa',
-    user: {
-      _id: '123',
-      name: 'Luciano'
-    }
-  }
-]
+// const events: EventType[]= [
+//   {
+//     title: 'Cumple del jefe',
+//     notes: 'hay que comprar los bebestibles',
+//     start: new Date(),
+//     end: addHours(new Date(), 2),
+//     bgColor: '#fafafa',
+//     user: {
+//       _id: '123',
+//       name: 'Luciano'
+//     }
+//   }
+// ]
 
 export const CalendarPage = () => {
 
   const [lastView] = useState<View>((localStorage.getItem('lastView') || 'week') as View)
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  // const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const { openDateModal } = useUiStore()
+  const { events } = useCalendarStore()
 
   const eventStyleGetter = () => {
     // console.log({event, start, end, isSelected})
@@ -45,26 +45,26 @@ export const CalendarPage = () => {
 
   const onDoubleClick = (event: EventType) => {
     console.log({ doubleClick: event })
+    openDateModal()
   }
 
   const onSelect = (event: EventType) => {
     console.log({ click: event })
-    setIsOpen(true)
+    // openDateModal()
+
   }
   
   
-  const onSelectSlot = (slotInfo: SlotInfo) => {
-    // console.log(event)
-    // console.log({ slotInfo : slotInfo })
-    
-    setIsOpen(true)
-  }
+  // const onSelectSlot = (slotInfo: SlotInfo) => {
+  //   console.log({ start: slotInfo.start })
+  //   setSelectedDate(slotInfo.start) 
+  //   openDateModal()
+  // }
 
 
   const onViewChange = (event: string) => {
     localStorage.setItem('lastView', event)
   }
-  const [isOpen, setIsOpen] = useState(true)
 
   return (
     <>
@@ -84,12 +84,15 @@ export const CalendarPage = () => {
         }}
         onDoubleClickEvent={onDoubleClick}
         onSelectEvent={onSelect}
-        onSelectSlot={onSelectSlot}
+        // onSelectSlot={onSelectSlot}
         onView={onViewChange}
-        selectable
+        // selectable
+        className='px-4 py-4'
 
       />
-      <CalendarModal isOpen={isOpen} setIsOpen={setIsOpen}/> 
+      <CalendarModal 
+        // selectedDate={selectedDate} 
+      /> 
     </>
   )
 }
