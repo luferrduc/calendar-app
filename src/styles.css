@@ -42,3 +42,12 @@
 .form-control.date-input{
   padding-left: 2rem;
 }
+
+.fab {
+  border-radius: 100%;
+  bottom: 25px;
+  font-size: 25px;
+  padding: 10px;
+  position: fixed;
+  right: 25px;
+}

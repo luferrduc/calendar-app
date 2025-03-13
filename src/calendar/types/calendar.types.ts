@@ -2,7 +2,7 @@ import React from "react";
 import { Event } from "react-big-calendar";
 
 export interface CalendarEventType extends Event {
-  _id: number;
+  _id?: number;
   notes?: string;
   bgColor?: string;
   user?: {
@@ -13,7 +13,7 @@ export interface CalendarEventType extends Event {
 
 
 export interface EventType {
-  _id: number;
+  _id?: number;
   title?: string | React.ReactNode;
   notes?: string;
   bgColor?: string;

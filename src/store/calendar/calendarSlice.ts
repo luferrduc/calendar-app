@@ -9,7 +9,7 @@ import { addHours } from 'date-fns'
 
 
 const tempEvent: EventType =   {
-    _id: 54949849879,
+    _id: new Date().getTime(),
     title: 'Cumple del jefe',
     notes: 'Hay que comprar los bebestibles',
     start: new Date().toISOString(),

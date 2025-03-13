@@ -4,7 +4,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 import { Navbar } from "../components/Navbar"
 import { localizer, getMessagesES } from '@/helpers'
-import { CalendarEvent, CalendarModal } from '../components'
+import { CalendarEvent, CalendarModal, FabAddNew } from '../components'
 import { CalendarEventType, EventType } from '../types/calendar.types'
 import { useUiStore, useCalendarStore } from '@/common/hooks'
 import { toEventType } from '@/helpers/eventConverter'
@@ -97,6 +97,7 @@ export const CalendarPage = () => {
       <CalendarModal 
         // selectedDate={selectedDate} 
       /> 
+      <FabAddNew />
     </>
   )
 }
