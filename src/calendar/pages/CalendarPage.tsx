@@ -5,8 +5,10 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Navbar } from "../components/Navbar"
 import { localizer, getMessagesES } from '@/helpers'
 import { CalendarEvent, CalendarModal } from '../components'
-import { EventType } from '../types/calendar.types'
+import { CalendarEventType, EventType } from '../types/calendar.types'
 import { useUiStore, useCalendarStore } from '@/common/hooks'
+import { addHours } from 'date-fns'
+import { toCalendarEvents } from '@/helpers/eventConverter'
 
 
 // const events: EventType[]= [
@@ -28,7 +30,10 @@ export const CalendarPage = () => {
   const [lastView] = useState<View>((localStorage.getItem('lastView') || 'week') as View)
   // const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const { openDateModal } = useUiStore()
-  const { events } = useCalendarStore()
+  const { events, setActiveEvent } = useCalendarStore()
+
+ 
+  const calendarEvents: CalendarEventType[] = toCalendarEvents(events)
 
   const eventStyleGetter = () => {
     // console.log({event, start, end, isSelected})
@@ -43,14 +48,22 @@ export const CalendarPage = () => {
     }
   }
 
-  const onDoubleClick = (event: EventType) => {
+  const onDoubleClick = (event: CalendarEventType) => {
     console.log({ doubleClick: event })
     openDateModal()
   }
 
-  const onSelect = (event: EventType) => {
+  const onSelect = (event: CalendarEventType) => {
     console.log({ click: event })
     // openDateModal()
+    const eventForRedux: EventType = {
+      ...event,
+      start:(event.start || new Date()).toISOString(),
+      end: (event.end || addHours(new Date(), 2)).toISOString(),
+    };
+
+    setActiveEvent(eventForRedux)
+
 
   }
   
@@ -72,7 +85,7 @@ export const CalendarPage = () => {
       <Calendar
         culture='es'
         localizer={localizer}
-        events={events}
+        events={calendarEvents}
         defaultView={lastView}
         startAccessor="start"
         endAccessor="end"

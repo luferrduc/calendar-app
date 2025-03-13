@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import DatePicker from "react-datepicker";
 import Modal from "react-modal"
 import { registerLocale } from  "react-datepicker";
@@ -8,7 +8,7 @@ import { toast } from "sonner"
 
 import "react-datepicker/dist/react-datepicker.css";
 import { FormValidations, useForm } from "@/common/hooks/useForm";
-import { useUiStore } from "@/common/hooks";
+import { useCalendarStore, useUiStore } from "@/common/hooks";
 
 
 registerLocale('es', es)
@@ -61,6 +61,7 @@ export const CalendarModal = () => {
 
   // TODO: crear snippet para useAppSelector
   const { isDateModalOpen, closeDateModal } = useUiStore()
+  const { activeEvent } = useCalendarStore()
 
   const [formSubmitted, setFormSubmitted] = useState(false)
 
@@ -84,7 +85,8 @@ export const CalendarModal = () => {
     start, 
     title, 
     formErrors, 
-    onResetForm  
+    onResetForm,
+    setFormState  
   } = useForm(formData, formValidations)
   
 
@@ -110,6 +112,18 @@ export const CalendarModal = () => {
           ? ''
           : 'is-invalid'
   }, [formSubmitted, formErrors.title])
+
+  useEffect(() => {
+    if(activeEvent != null) {
+      setFormState({
+        title: activeEvent.title as string,
+        end: new Date(activeEvent.end!),
+        start: new Date(activeEvent.start!),
+        notes: activeEvent.notes!
+       })
+    }
+  }, [activeEvent, setFormState])
+
 
   const onCloseModal = () => {
     closeDateModal()

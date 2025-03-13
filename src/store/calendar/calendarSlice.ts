@@ -6,11 +6,14 @@ import { addHours } from 'date-fns'
 
 
 
+
+
 const tempEvent: EventType =   {
+    _id: 54949849879,
     title: 'Cumple del jefe',
-    notes: 'hay que comprar los bebestibles',
-    start: new Date(),
-    end: addHours(new Date(), 2),
+    notes: 'Hay que comprar los bebestibles',
+    start: new Date().toISOString(),
+    end: addHours(new Date(), 2).toISOString(),
     bgColor: '#fafafa',
     user: {
       _id: '123',
@@ -35,13 +38,14 @@ export const calendarSlice = createSlice({
   name: 'calendar',
   initialState,
   reducers: {
-      create: (state, action: PayloadAction<string>) => {
-      
+      onSetActiveEvent: (state, action: PayloadAction<EventType>) => {
+        
+        state.activeEvent = action.payload
     },
 
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { create } = calendarSlice.actions
+export const { onSetActiveEvent } = calendarSlice.actions
 // export const selectTemplate = (state: RootState) => state.
