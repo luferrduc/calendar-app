@@ -100,6 +100,7 @@ export const useForm = <
     onResetForm,
     formErrors,
     isFormValid,
-    debouncedFormState
+    debouncedFormState,
+    setFormState
   }
 }
