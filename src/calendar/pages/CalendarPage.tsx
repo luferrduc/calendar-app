@@ -7,8 +7,7 @@ import { localizer, getMessagesES } from '@/helpers'
 import { CalendarEvent, CalendarModal } from '../components'
 import { CalendarEventType, EventType } from '../types/calendar.types'
 import { useUiStore, useCalendarStore } from '@/common/hooks'
-import { addHours } from 'date-fns'
-import { toCalendarEvents } from '@/helpers/eventConverter'
+import { toEventType } from '@/helpers/eventConverter'
 
 
 // const events: EventType[]= [
@@ -30,10 +29,8 @@ export const CalendarPage = () => {
   const [lastView] = useState<View>((localStorage.getItem('lastView') || 'week') as View)
   // const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const { openDateModal } = useUiStore()
-  const { events, setActiveEvent } = useCalendarStore()
+  const { setActiveEvent, calendarEvents } = useCalendarStore()
 
- 
-  const calendarEvents: CalendarEventType[] = toCalendarEvents(events)
 
   const eventStyleGetter = () => {
     // console.log({event, start, end, isSelected})
@@ -56,14 +53,8 @@ export const CalendarPage = () => {
   const onSelect = (event: CalendarEventType) => {
     console.log({ click: event })
     // openDateModal()
-    const eventForRedux: EventType = {
-      ...event,
-      start:(event.start || new Date()).toISOString(),
-      end: (event.end || addHours(new Date(), 2)).toISOString(),
-    };
-
+    const eventForRedux: EventType = toEventType(event)
     setActiveEvent(eventForRedux)
-
 
   }
   
