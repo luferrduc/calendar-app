@@ -9,6 +9,7 @@ import { toast } from "sonner"
 import "react-datepicker/dist/react-datepicker.css";
 import { FormValidations, useForm } from "@/common/hooks/useForm";
 import { useCalendarStore, useUiStore } from "@/common/hooks";
+import { toEventType } from "@/helpers/eventConverter";
 
 
 registerLocale('es', es)
@@ -22,22 +23,22 @@ const customStyles = {
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
   },
-};
-
-
-const formData = {
-  title: '',
-  notes: '',
-  start: new Date(),
-  end: addHours(new Date(), 2)
 }
+
 
 type FormData = {
   title: string;
   notes: string;
   start: Date;
   end: Date;
-};
+}
+
+const formData: FormData = {
+  title: '',
+  notes: '',
+  start: new Date(),
+  end: addHours(new Date(), 2)
+}
 
 
 const formValidations: FormValidations<FormData> = {
@@ -61,7 +62,7 @@ export const CalendarModal = () => {
 
   // TODO: crear snippet para useAppSelector
   const { isDateModalOpen, closeDateModal } = useUiStore()
-  const { activeEvent } = useCalendarStore()
+  const { activeEvent, startSavingEvent } = useCalendarStore()
 
   const [formSubmitted, setFormSubmitted] = useState(false)
 
@@ -86,7 +87,8 @@ export const CalendarModal = () => {
     title, 
     formErrors, 
     onResetForm,
-    setFormState  
+    setFormState,
+    formState
   } = useForm(formData, formValidations)
   
 
@@ -130,7 +132,7 @@ export const CalendarModal = () => {
     
   }
 
-  const onSubmitForm = (event: FormEvent) => {
+  const onSubmitForm = async(event: FormEvent) => {
     event.preventDefault()
     setFormSubmitted(true)
 
@@ -166,12 +168,21 @@ export const CalendarModal = () => {
       return
     } 
 
-    // TODO: 
-    // Cerrar el modal
-    onCloseModal()
-    // Restablecer el form
+  
+    const newEvent = toEventType({
+      _id: activeEvent?._id,
+      ...formState,
+      bgColor: activeEvent?.bgColor,
+      user: activeEvent?.user
+      
+    })
+  
+    await startSavingEvent(newEvent)
+  
     onResetForm()
-    // Remover errores en pantalla
+    setFormSubmitted(false)
+    onCloseModal()
+    
   }
   return (
     <Modal

@@ -1,6 +1,6 @@
 import { CalendarEventType, EventType } from "@/calendar/types/calendar.types"
 import { toCalendarEvent, toCalendarEvents } from "@/helpers/eventConverter"
-import { onSetActiveEvent } from "@/store/calendar"
+import { addNewEvent, onSetActiveEvent, updateEvent } from "@/store/calendar"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 
 
@@ -15,6 +15,33 @@ export const useCalendarStore = () => {
     dispatch(onSetActiveEvent(event))
   }
 
+
+  const startSavingEvent = async(event: EventType) => {
+    // TODO: llegar al backend
+
+    // Si va todo bien
+    if(event._id !== undefined) {
+      // actualizando
+      dispatch(updateEvent(event))
+    } else{
+      // creando
+      const newEvent: EventType = {
+        ...event,
+        _id: new Date().getTime()
+      }
+      dispatch(addNewEvent(newEvent))
+    }
+  }
+
+  // const createNewEvent = (event: EventType) => {
+  //   const newEvent: EventType = {
+  //     _id: new Date().getTime(),
+  //     ...event
+  //   }
+  //   dispatch(addNewEvent(newEvent))
+  //   setActiveEvent(newEvent)
+  // }
+
   return {
     //* Props
     events,
@@ -22,6 +49,8 @@ export const useCalendarStore = () => {
     calendarEvents,
     calendarActiveEvent,
     //* Methods
-    setActiveEvent
+    setActiveEvent,
+    // createNewEvent,
+    startSavingEvent
   }
 }

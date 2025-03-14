@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Calendar, SlotInfo, View } from 'react-big-calendar'
+import { Calendar, View } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 import { Navbar } from "../components/Navbar"
@@ -46,12 +46,10 @@ export const CalendarPage = () => {
   }
 
   const onDoubleClick = (event: CalendarEventType) => {
-    console.log({ doubleClick: event })
     openDateModal()
   }
 
   const onSelect = (event: CalendarEventType) => {
-    console.log({ click: event })
     // openDateModal()
     const eventForRedux: EventType = toEventType(event)
     setActiveEvent(eventForRedux)
