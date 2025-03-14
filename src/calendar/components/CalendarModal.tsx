@@ -62,7 +62,7 @@ export const CalendarModal = () => {
 
   // TODO: crear snippet para useAppSelector
   const { isDateModalOpen, closeDateModal } = useUiStore()
-  const { activeEvent, startSavingEvent } = useCalendarStore()
+  const { activeEvent, startSavingEvent, setActiveEvent } = useCalendarStore()
 
   const [formSubmitted, setFormSubmitted] = useState(false)
 
@@ -128,8 +128,10 @@ export const CalendarModal = () => {
 
 
   const onCloseModal = () => {
-    closeDateModal()
-    
+    if(!activeEvent?._id) {
+      setActiveEvent(null)
+    }
+    closeDateModal()    
   }
 
   const onSubmitForm = async(event: FormEvent) => {

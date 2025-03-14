@@ -1,6 +1,6 @@
 import { CalendarEventType, EventType } from "@/calendar/types/calendar.types"
 import { toCalendarEvent, toCalendarEvents } from "@/helpers/eventConverter"
-import { addNewEvent, onSetActiveEvent, updateEvent } from "@/store/calendar"
+import { addNewEvent, onDeleteEvent, onSetActiveEvent, updateEvent } from "@/store/calendar"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 
 
@@ -11,7 +11,7 @@ export const useCalendarStore = () => {
   const calendarEvents: CalendarEventType[] = toCalendarEvents(events)
   const calendarActiveEvent: CalendarEventType | null =  activeEvent ? toCalendarEvent(activeEvent) : null
 
-  const setActiveEvent = (event: EventType) => {
+  const setActiveEvent = (event: EventType | null) => {
     dispatch(onSetActiveEvent(event))
   }
 
@@ -33,6 +33,12 @@ export const useCalendarStore = () => {
     }
   }
 
+  const startDeletingEvent = () => {
+    // TODO: llegar al backend
+    dispatch(onDeleteEvent())
+  }
+
+
   // const createNewEvent = (event: EventType) => {
   //   const newEvent: EventType = {
   //     _id: new Date().getTime(),
@@ -48,9 +54,11 @@ export const useCalendarStore = () => {
     activeEvent,
     calendarEvents,
     calendarActiveEvent,
+    hasEventActive: !!activeEvent,
     //* Methods
     setActiveEvent,
     // createNewEvent,
-    startSavingEvent
+    startSavingEvent,
+    startDeletingEvent
   }
 }

@@ -51,3 +51,17 @@
   position: fixed;
   right: 25px;
 }
+
+.fab-delete {
+  border-radius: 100%;
+  bottom: 25px;
+  font-size: 20px;
+  padding: 10px;
+  position: fixed;
+  left: 25px;
+  height: 47px;
+  width: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

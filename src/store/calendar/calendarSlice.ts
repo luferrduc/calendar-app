@@ -38,7 +38,7 @@ export const calendarSlice = createSlice({
   name: 'calendar',
   initialState,
   reducers: {
-    onSetActiveEvent: (state, action: PayloadAction<EventType>) => {        
+    onSetActiveEvent: (state, action: PayloadAction<EventType | null>) => {        
       state.activeEvent = action.payload
     },
     addNewEvent: (state, action: PayloadAction<EventType>) => {
@@ -48,18 +48,22 @@ export const calendarSlice = createSlice({
     updateEvent: (state, action: PayloadAction<EventType>) => {
       state.events = state.events.map( event => {
         if(event._id === action.payload._id){
-          return {
-            _id: event._id,
-            ...action.payload
-          }
+          return action.payload
         }
         return event
       })
       state.activeEvent = null
     },
+    onDeleteEvent: (state) => {
+      // state.events = state.events.filter( event => event._id !== action.payload)
+      if(state.activeEvent){
+        state.events = state.events.filter( event => event._id !== state.activeEvent!._id)
+        state.activeEvent = null
+      }
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { onSetActiveEvent, addNewEvent, updateEvent } = calendarSlice.actions
+export const { onSetActiveEvent, addNewEvent, updateEvent, onDeleteEvent } = calendarSlice.actions
 // export const selectTemplate = (state: RootState) => state.
